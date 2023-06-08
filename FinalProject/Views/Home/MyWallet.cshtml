@@ -1,0 +1,14 @@
+﻿@model Wallet
+
+<h2>My Wallet</h2>
+
+<p>Balance: @Model.Balance</p>
+
+<a href="@Url.Action("MyWalletAsync", "Home")">My Wallet</a>
+
+<li class="nav-item">
+    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="MyWalletAsync">My Wallet</a>
+    <p value="" class="nav-link text-dark Wallet"></p>
+</li>
+
+
