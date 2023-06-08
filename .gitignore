@@ -24,6 +24,8 @@
 *.bak
 *.log
 *.tmp
+*.dll
+*.pdb
 
 # Environment configuration files
 .env
