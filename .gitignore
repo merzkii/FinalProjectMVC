@@ -1,0 +1,38 @@
+# Visual Studio files
+*.suo
+*.user
+*.sln
+*.sln.DotSettings
+*.csproj
+*.csproj.user
+.vs/
+
+# JetBrains Rider files
+.idea/
+
+# Compiled output
+/bin/
+/obj/
+
+# NuGet packages
+/packages/
+
+# Node.js dependencies
+/node_modules/
+
+# User-specific files
+*.bak
+*.log
+*.tmp
+
+# Environment configuration files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Dependency lock files
+Gemfile.lock
+yarn.lock
+package-lock.json
