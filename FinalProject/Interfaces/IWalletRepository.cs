@@ -8,5 +8,7 @@ namespace FinalProject.Interfaces
         Task AddMoneyToWallet(string userId, decimal amount);
         Task WithdrawMoneyFromWallet(string userId, decimal amount);
         Task <int> CreateWallet(string userId);
+        Task<List<Transaction>> GetTransactionHistory(string userId, DateTime fromDate, DateTime toDate);
+        Task RecordTransaction(string userId, decimal amount, string transactionType);
     }
 }

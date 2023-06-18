@@ -6,6 +6,7 @@ namespace FinalProject.Models
     {
         public int Id { get; set; }
         public decimal Balance { get; set; }=0;
-        public object UserId { get; set; }
+        public string UserId { get; set; }
+        
     }
 }

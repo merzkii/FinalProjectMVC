@@ -21,18 +21,47 @@ namespace FinalProject.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var balance = await Walletrepository.GetBalanceAsync(user);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var balance = await Walletrepository.GetBalanceAsync(userId);
+            
 
             return View(balance);
+
         }
-        
 
 
+        [HttpPost]
+        public async Task <IActionResult>RecordTransactionHistory( decimal amount,string transactionType)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            await Walletrepository.RecordTransaction(userId, amount, transactionType);
+
+            return RedirectToAction("TransactionHistory");
+
+        }
 
 
+        [HttpGet]
+        public async Task<IActionResult> TransactionHistory(DateTime? fromDate, DateTime? toDate)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        
+            if (fromDate == null || toDate == null)
+            {
+               
+                fromDate = new DateTime(1753, 1, 1);
+                toDate = new DateTime(9999, 12, 31);
+            }
+
+            var transactionHistory = await Walletrepository.GetTransactionHistory(userId, fromDate.Value, toDate.Value);
+
+            ViewBag.FromDate = fromDate;
+            ViewBag.ToDate = toDate;
+
+            return View(transactionHistory);
+        }
+
+
         [HttpGet]
         
         public async Task<JsonResult> MyWalletAsync(string userId)
@@ -56,8 +85,10 @@ namespace FinalProject.Controllers
 
             
             await Walletrepository.AddMoneyToWallet(userId, amount);
+            var transactionType = "Deposit";
 
-           
+            await Walletrepository.RecordTransaction(userId, amount, transactionType);
+
             return RedirectToAction("Index");
         }
         [HttpGet]
@@ -73,7 +104,9 @@ namespace FinalProject.Controllers
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
+            var transactionType = "Withdraw";
 
+            await Walletrepository.RecordTransaction(userId, amount, transactionType);
             await Walletrepository.WithdrawMoneyFromWallet(userId, amount);
 
 

@@ -1,0 +1,64 @@
+﻿@model List<Transaction>
+
+@{
+    ViewData["Title"] = "Transaction History";
+    var fromDate = ViewBag.FromDate as DateTime?;
+    var toDate = ViewBag.ToDate as DateTime?;
+}
+
+<div class="container">
+    <header>
+        <h1 class="display-4 text-center">Transaction History</h1>
+    </header>
+
+    <main>
+        <form method="get" action="@Url.Action("TransactionHistory")">
+            <div class="form-group row">
+                <label for="fromDate" class="col-sm-2 col-form-label">From:</label>
+                <div class="col-sm-4">
+                    <input type="date" class="form-control" id="fromDate" name="fromDate" required />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="toDate" class="col-sm-2 col-form-label">To:</label>
+                <div class="col-sm-4">
+                      <input type="date" class="form-control" id="toDate" name="toDate" required />
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-2"></div>
+                <div class="col-sm-4">
+                    <button type="submit" class="btn btn-primary">Show Transactions</button>
+                </div>
+            </div>
+        </form>
+
+        @if (Model.Any())
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in Model)
+                    {
+                        <tr>
+                            <td>@transaction.TransactionDate</td>
+                            <td>@transaction.TransactionType</td>
+                            <td>@transaction.Amount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No transactions found for the selected date range.</p>
+        }
+    </main>
+
+    
