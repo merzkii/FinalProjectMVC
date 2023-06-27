@@ -22,6 +22,7 @@ namespace FinalProject
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IWalletRepository, WalletRepository>();
+            builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
             var app = builder.Build();
 

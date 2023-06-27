@@ -11,11 +11,13 @@ namespace FinalProject.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         public IWalletRepository Walletrepository { get; set; }
+        public ITokenRepository TokenRepository { get; set; }
 
-        public HomeController(ILogger<HomeController> logger, IWalletRepository walletRepository)
+        public HomeController(ILogger<HomeController> logger, IWalletRepository walletRepository,ITokenRepository tokenRepository)
         {
             _logger = logger;
             Walletrepository = walletRepository;
+            TokenRepository = tokenRepository;
 
         }
         [HttpGet]
@@ -127,6 +129,14 @@ namespace FinalProject.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetToken()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var token = await TokenRepository.GetToken(userId);
+
+            return View("TokenView", token);
         }
     }
 }

@@ -33,6 +33,7 @@ namespace FinalProject.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IWalletRepository WalletRepository;
+        private readonly ITokenRepository TokenRepository;
 
         public RegisterModel(
             IWalletRepository walletRepository,
@@ -40,10 +41,13 @@ namespace FinalProject.Areas.Identity.Pages.Account
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ITokenRepository tokenRepository
+            )
             
             
         {
+            TokenRepository = tokenRepository;
             WalletRepository= walletRepository;
             _userManager = userManager;
             _userStore = userStore;
@@ -123,6 +127,8 @@ namespace FinalProject.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 var appUser = new IdentityUser { UserName = user.Email, Email = user.Email };
+                
+                
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -157,6 +163,13 @@ namespace FinalProject.Areas.Identity.Pages.Account
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+
+                        // Generate token for the user
+                        var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "Confirmation");
+
+                        // Store the token in the database
+                        await TokenRepository.SaveToken(user.Id, token);
+
                         return RedirectToAction(nameof(HomeController.Index), "Home");
                     }
                 }

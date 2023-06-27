@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bRFBoDnpx+W2ZhLNVxuSejexkBPGt3AW5QTicAB1I/hPqjUTo7x5Fhx6ZO18dglp9EXpjbW+vaa0EEJhVUe1Jg==",
+  "dgSpecHash": "vmknLV/FHpQllwv5ziefQQ6opChkgUU5HzVqAbD8iY5bAjNh79slqSctH3awxd1RdZ0gv28MWw18VytXlxhEoA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\lenovo\\source\\repos\\FinalProject\\FinalProject\\FinalProject.csproj",
+  "projectFilePath": "C:\\Users\\lenovo\\source\\repos\\FinalProjectMVC\\FinalProject\\FinalProject.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lenovo\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\lenovo\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

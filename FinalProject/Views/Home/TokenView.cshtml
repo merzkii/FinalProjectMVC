@@ -1,0 +1,12 @@
+﻿@model string
+
+<h1>Token</h1>
+
+@if (!string.IsNullOrEmpty(Model))
+{
+    <p>Your token is: <strong>@Model</strong></p>
+}
+else
+{
+    <p>No token found for the current user.</p>
+}
