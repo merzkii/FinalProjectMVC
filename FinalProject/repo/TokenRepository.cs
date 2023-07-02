@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using FinalProject.Interfaces;
 using Microsoft.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace FinalProject.repo
 {
@@ -18,25 +20,42 @@ namespace FinalProject.repo
         {
             using (var connection = new SqlConnection(_db.GetConnectionString("DefaultConnection")))
             {
-                var query = "SELECT TokenValue FROM Tokens WHERE UserId = @UserId";
+                var query = "SELECT PublicToken FROM Tokens WHERE UserId = @UserId";
                 var parameters = new { UserId = userId };
-
                 return await connection.QuerySingleOrDefaultAsync<string>(query, parameters);
             }
         }
-    
 
-        public async Task SaveToken(string userId, string token)
+        public async Task SaveToken(string userId, string publicToken)
+        {
+            string connectionString = _db.GetConnectionString("DefaultConnection");
+            string sql = "INSERT INTO Tokens (UserId, PublicToken) " +
+                         "VALUES (@UserId, @PublicToken)";
+
+            using (var connection = new SqlConnection(connectionString))
             {
-                string connectionString = _db.GetConnectionString("DefaultConnection");
-                string sql = "INSERT INTO Tokens (UserId, TokenValue, TokenPurpose, ExpirationDate) " +
-                             "VALUES (@UserId, @TokenValue, 'ResetPassword', DATEADD(DAY, 1, GETDATE()))";
+                await connection.ExecuteAsync(sql, new { UserId = userId, PublicToken = publicToken });
+            }
+        }
 
-                using (var connection = new SqlConnection(connectionString))
+        public string GeneratePublicToken()
+        {
+            const string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            const int tokenLength = 16; // Adjust the length of the token as needed
+
+            StringBuilder tokenBuilder = new StringBuilder();
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenBytes = new byte[tokenLength];
+                rng.GetBytes(tokenBytes);
+
+                foreach (byte b in tokenBytes)
                 {
-                    await connection.ExecuteAsync(sql, new { UserId = userId, TokenValue = token });
+                    tokenBuilder.Append(allowedChars[b % allowedChars.Length]);
                 }
             }
-        
+
+            return tokenBuilder.ToString();
+        }
     }
 }

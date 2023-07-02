@@ -4,8 +4,9 @@
     {
         public int Id { get; set; }
         public string UserId { get; set; }
-        public string TokenValue { get; set; }
-        public string TokenPurpose { get; set; }
+        
+        public Guid PublicToken { get; set; }
+        public Guid PrivateToken { get; set; }
         public DateTime ExpirationDate { get; set; }
     }
 }
