@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
@@ -164,11 +165,8 @@ namespace FinalProject.Areas.Identity.Pages.Account
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
 
-                        // Generate token for the user
-                        var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "Confirmation");
-
-                        // Store the token in the database
-                        await TokenRepository.SaveToken(user.Id, token);
+                        
+                        
 
                         return RedirectToAction(nameof(HomeController.Index), "Home");
                     }
@@ -182,6 +180,37 @@ namespace FinalProject.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+
+        public static string GeneratePrivateToken()
+        {
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenBytes = new byte[32]; // Adjust the length of the token as needed
+                rng.GetBytes(tokenBytes);
+                return Convert.ToBase64String(tokenBytes);
+            }
+        }
+
+        public static string GeneratePublicToken()
+        {
+            const string allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            const int tokenLength = 16; // Adjust the length of the token as needed
+
+            StringBuilder tokenBuilder = new StringBuilder();
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] tokenBytes = new byte[tokenLength];
+                rng.GetBytes(tokenBytes);
+
+                foreach (byte b in tokenBytes)
+                {
+                    tokenBuilder.Append(allowedChars[b % allowedChars.Length]);
+                }
+            }
+
+            return tokenBuilder.ToString();
         }
         private async Task AssignWalletToUser(string userId, int walletId)
         {

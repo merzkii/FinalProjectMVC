@@ -1,5 +1,6 @@
 ﻿using FinalProject.Interfaces;
 using FinalProject.Models;
+using FinalProject.repo;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -134,9 +135,16 @@ namespace FinalProject.Controllers
         public async Task<IActionResult> GetToken()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var token = await TokenRepository.GetToken(userId);
-
-            return View("TokenView", token);
+            var publicToken = TokenRepository.GeneratePublicToken();
+            await TokenRepository.SaveToken(userId, publicToken);
+            return View("TokenView", publicToken);
         }
+            
+
+            
+            
+
+            
+
     }
 }
