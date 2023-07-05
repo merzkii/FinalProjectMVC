@@ -1,4 +1,6 @@
-﻿namespace FinalProject.Interfaces
+﻿using FinalProject.Models;
+
+namespace FinalProject.Interfaces
 {
     public interface ITokenRepository
     {
